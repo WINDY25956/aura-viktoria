@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bedeutung von Gefängnistätowierungen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #030712; 
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(31, 41, 55, 0.4), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(17, 24, 39, 0.8), transparent 25%),
+                linear-gradient(180deg, #050505 0%, #111827 100%);
+            background-attachment: fixed;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        
+        .card-hover {
+            background-color: rgba(31, 41, 55, 0.7); 
+            backdrop-filter: blur(4px);
+            transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+        }
+        .card-hover:hover {
+            background-color: rgba(31, 41, 55, 0.95);
+            z-index: 10;
+        }
+
+        .card-status:hover { box-shadow: 0 15px 40px -5px rgba(220, 38, 38, 0.4); } 
+        .card-religion:hover { box-shadow: 0 15px 40px -5px rgba(234, 179, 8, 0.4); } 
+        .card-animal:hover { box-shadow: 0 15px 40px -5px rgba(34, 197, 94, 0.4); } 
+        .card-abbr:hover { box-shadow: 0 15px 40px -5px rgba(168, 85, 247, 0.4); } 
+        .card-misc:hover { box-shadow: 0 15px 40px -5px rgba(59, 130, 246, 0.4); } 
+
+        .tattoo-img {
+            filter: grayscale(60%) contrast(1.2);
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .card-hover:hover .tattoo-img {
+            filter: grayscale(0%) contrast(1.1);
+            transform: scale(1.08);
+        }
+
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background-color: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+            padding: 8px 0;
+            white-space: nowrap;
+        }
+        .ticker {
+            display: inline-block;
+            animation: ticker 35s linear infinite;
+        }
+        .ticker:hover { animation-play-state: paused; }
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-family: monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .ticker-item span { color: #facc15; font-weight: bold; }
+        
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .fade-in-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        @media (max-width: 600px) { .memory-grid { grid-template-columns: repeat(3, 1fr); } }
+        .memory-card {
+            aspect-ratio: 1;
+            background-color: #1f2937;
+            border: 2px solid #374151;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .memory-card:hover { border-color: #60a5fa; }
+        .memory-card.flipped { background-color: #2563eb; border-color: #93c5fd; }
+        .memory-card.matched { background-color: #059669; border-color: #34d399; cursor: default; }
+        .memory-card .symbol { display: none; }
+        .memory-card.flipped .symbol, .memory-card.matched .symbol { display: block; }
+
+        .quiz-btn { transition: all 0.2s; }
+        .quiz-btn:hover:not(:disabled) { background-color: #4c1d95; transform: translateX(5px); }
+        .quiz-btn.correct { background-color: #059669; border-color: #34d399; color: white;}
+        .quiz-btn.wrong { background-color: #dc2626; border-color: #f87171; color: white;}
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="bg-gray-900 bg-opacity-80 backdrop-blur-md border-b border-gray-800 p-6 shadow-2xl sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-500 uppercase tracking-wider">Tattoos und Status</h1>
+                <p class="text-gray-400 mt-2 text-sm">Handbuch der Gefängniskultur und Symbolik</p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-4 items-center w-full md:w-auto">
+                <a href="#games-section" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-lg shadow-lg hover:shadow-purple-500/50 hover:scale-105 transition-all text-sm uppercase tracking-wider">Interaktive Zone</a>
+                <input type="text" id="searchInput" placeholder="Suche nach Bedeutung oder Name..." class="w-full md:w-80 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-gray-400 text-gray-200 shadow-inner">
+            </div>
+        </div>
+    </header>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item"><span>VOR V ZAKONE:</span> Höchste Autorität (Dieb im Gesetz)</div>
+            <div class="ticker-item"><span>BRATWA:</span> Kriminelle Bruderschaft</div>
+            <div class="ticker-item"><span>OBTSCHAK:</span> Gemeinsame Kasse der Gefangenen</div>
+            <div class="ticker-item"><span>ZONA:</span> Das Gefängnis / Das Lager</div>
+            <div class="ticker-item"><span>MALYAWA:</span> Geheime Nachricht auf Papier</div>
+            <div class="ticker-item"><span>SHMON:</span> Durchsuchung durch Wärter</div>
+            <div class="ticker-item"><span>PACHAN:</span> Der Boss / Anführer</div>
+            <div class="ticker-item"><span>MUSOR:</span> Abwertend für Polizist/Wärter</div>
+            
+            <div class="ticker-item"><span>VOR V ZAKONE:</span> Höchste Autorität (Dieb im Gesetz)</div>
+            <div class="ticker-item"><span>BRATWA:</span> Kriminelle Bruderschaft</div>
+            <div class="ticker-item"><span>OBTSCHAK:</span> Gemeinsame Kasse der Gefangenen</div>
+            <div class="ticker-item"><span>ZONA:</span> Das Gefängnis / Das Lager</div>
+            <div class="ticker-item"><span>MALYAWA:</span> Geheime Nachricht auf Papier</div>
+            <div class="ticker-item"><span>SHMON:</span> Durchsuchung durch Wärter</div>
+            <div class="ticker-item"><span>PACHAN:</span> Der Boss / Anführer</div>
+            <div class="ticker-item"><span>MUSOR:</span> Abwertend für Polizist/Wärter</div>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto p-6 mt-8 flex-grow">
+        
+        <div class="flex flex-wrap gap-3 mb-8 fade-in-element" id="filterContainer">
+            <button class="filter-btn bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg active shadow-lg" data-filter="all">Alle</button>
+            <button class="filter-btn bg-gray-800 hover:bg-red-900 text-gray-300 border border-gray-700 px-4 py-2 rounded-lg shadow-lg transition-colors" data-filter="status">Status</button>
+            <button class="filter-btn bg-gray-800 hover:bg-yellow-900 text-gray-300 border border-gray-700 px-4 py-2 rounded-lg shadow-lg transition-colors" data-filter="religion">Religiös</button>
+            <button class="filter-btn bg-gray-800 hover:bg-green-900 text-gray-300 border border-gray-700 px-4 py-2 rounded-lg shadow-lg transition-colors" data-filter="animal">Tiere</button>
+            <button class="filter-btn bg-gray-800 hover:bg-purple-900 text-gray-300 border border-gray-700 px-4 py-2 rounded-lg shadow-lg transition-colors" data-filter="abbr">Abkürzungen</button>
+            <button class="filter-btn bg-gray-800 hover:bg-blue-900 text-gray-300 border border-gray-700 px-4 py-2 rounded-lg shadow-lg transition-colors" data-filter="misc">Sonstiges</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="tattoosGrid">
+            
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-red-600 card-hover card-status" data-category="status">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1598371839696-5c5bb00bdc28?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-red-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Status</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Diebessterne</h2>
+                    <p class="text-sm text-red-400 mb-4 font-semibold">Ort: Schlüsselbeine, Knie</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Sterne auf den Schlüsselbeinen bedeuten einen hohen Status in der kriminellen Hierarchie. Auf den Knien: "Ich werde niemals vor dem Gesetz oder der Verwaltung auf die Knie gehen".</p>
+                </div>
+            </div>
+
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-yellow-500 card-hover card-religion" data-category="religion">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1548625361-ec72af05bc1e?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-yellow-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Religiös</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Kirche, Kathedrale, Kuppeln</h2>
+                    <p class="text-sm text-yellow-400 mb-4 font-semibold">Ort: Rücken, Brust</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Die Anzahl der Kuppeln entspricht oft der Anzahl der Jahre im Gefängnis oder der Vorstrafen. Kreuze auf den Kuppeln bedeuten, dass die Strafe vollständig verbüßt wurde.</p>
+                </div>
+            </div>
+
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-green-500 card-hover card-animal" data-category="animal">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1515248137880-45e105b710e0?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-green-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Tiere</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Spinne im Netz</h2>
+                    <p class="text-sm text-green-400 mb-4 font-semibold">Ort: Hand, Hals</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Symbol eines Taschendiebs. Kriecht sie nach oben: "Habe gestohlen und werde weiter stehlen". Kriecht sie nach unten: "Habe aufgehört" (kriminelle Aktivitäten beendet).</p>
+                </div>
+            </div>
+
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-red-600 card-hover card-status" data-category="status">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-red-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Status</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Ringe</h2>
+                    <p class="text-sm text-red-400 mb-4 font-semibold">Ort: Fingergelenke</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">"Visitenkarte" des Häftlings. Das Muster verrät den Artikel der Verurteilung, den Status (z.B. normaler Häftling, Autorität) und die Anzahl der Vorstrafen.</p>
+                </div>
+            </div>
+
+             <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-green-500 card-hover card-animal" data-category="animal">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-green-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Tiere</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Katze</h2>
+                    <p class="text-sm text-green-400 mb-4 font-semibold">Ort: Unterarm, Brust</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Symbol der Diebe. Katze mit Schlüsseln – Einbrecher. Oft auch als Abkürzung K.O.T. tätowiert (Russisch für "Ureinwohner des Gefängnisses").</p>
+                </div>
+            </div>
+
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-yellow-500 card-hover card-religion" data-category="religion">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1584622285880-b2edb0bf3c54?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-yellow-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Religiös</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Kreuz auf der Brust</h2>
+                    <p class="text-sm text-yellow-400 mb-4 font-semibold">Ort: Brust</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Ein großes Kreuz auf der Brust wird normalerweise von den höchsten kriminellen Autoritäten getragen. Das Symbol bedeutet Reinheit vor dem Diebesgesetz.</p>
+                </div>
+            </div>
+
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-red-600 card-hover card-status" data-category="status">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1582560475093-ba66accbc424?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-red-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Status</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Grinsen (Raubtier)</h2>
+                    <p class="text-sm text-red-400 mb-4 font-semibold">Ort: Brust, Schulter</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Bedeutet "Grinsen gegen die Macht". Offener Hass gegen Strafverfolgungsbehörden und die Gefängnisverwaltung. Zeigt extreme Unversöhnlichkeit.</p>
+                </div>
+            </div>
+
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-purple-500 card-hover card-abbr" data-category="abbr">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1558236714-d0a6333d7d1e?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-4xl font-serif font-bold text-gray-200 tracking-widest drop-shadow-lg">С.Л.О.Н.</span>
+                    </div>
+                    <span class="absolute top-3 right-3 bg-purple-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Abkürzungen</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">S.L.O.N. (С.Л.О.Н.)</h2>
+                    <p class="text-sm text-purple-400 mb-4 font-semibold">Ort: Handrücken, Finger</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Steht im Russischen für "Tod den Bullen durchs Messer" oder "Von klein auf nur Unglück". Historisch: "Solowezki-Lager zur besonderen Verwendung".</p>
+                </div>
+            </div>
+
+            <div class="tattoo-card fade-in-element rounded-xl overflow-hidden border-x border-b border-gray-700/50 border-t-4 border-t-green-500 card-hover card-animal" data-category="animal">
+                <div class="h-48 bg-gray-900/50 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1561731216-c3a428753408?auto=format&fit=crop&w=600&q=80" alt="" class="w-full h-full object-cover tattoo-img" onerror="this.style.display='none'">
+                    <span class="absolute top-3 right-3 bg-green-600/80 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">Tiere</span>
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-bold text-gray-100 mb-2 tattoo-title">Tiger</h2>
+                    <p class="text-sm text-green-400 mb-4 font-semibold">Ort: Brust, Schulter</p>
+                    <p class="text-gray-300 text-sm tattoo-desc">Symbolisiert Wut, Grausamkeit und Unbarmherzigkeit. Oft getragen von "Stier" (Быки) - Schlägern, die auf Befehl von Autoritäten physische Gewalt anwenden.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="games-section" class="max-w-7xl mx-auto p-6 mt-16">
+        <h2 class="text-2xl font-bold text-gray-100 mb-8">🎮 Interaktive Spiele & Tests</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Memory Game -->
+            <div class="bg-gray-900/50 backdrop-blur rounded-xl p-8 border border-gray-800">
+                <h3 class="text-xl font-bold text-blue-400 mb-4">Memory Spiel</h3>
+                <p class="text-gray-400 mb-6 text-sm">Finde die Paare von Tattoo-Symbolen!</p>
+                <div class="memory-grid" id="memoryGrid">
+                    <div class="memory-card" data-symbol="⭐">
+                        <span class="symbol">⭐</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🐱">
+                        <span class="symbol">🐱</span>
+                    </div>
+                    <div class="memory-card" data-symbol="✝️">
+                        <span class="symbol">✝️</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🐯">
+                        <span class="symbol">🐯</span>
+                    </div>
+                    <div class="memory-card" data-symbol="⭐">
+                        <span class="symbol">⭐</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🕷️">
+                        <span class="symbol">🕷️</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🐱">
+                        <span class="symbol">🐱</span>
+                    </div>
+                    <div class="memory-card" data-symbol="✝️">
+                        <span class="symbol">✝️</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🕷️">
+                        <span class="symbol">🕷️</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🐯">
+                        <span class="symbol">🐯</span>
+                    </div>
+                    <div class="memory-card" data-symbol="😈">
+                        <span class="symbol">😈</span>
+                    </div>
+                    <div class="memory-card" data-symbol="💍">
+                        <span class="symbol">💍</span>
+                    </div>
+                    <div class="memory-card" data-symbol="😈">
+                        <span class="symbol">😈</span>
+                    </div>
+                    <div class="memory-card" data-symbol="💍">
+                        <span class="symbol">💍</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🔤">
+                        <span class="symbol">🔤</span>
+                    </div>
+                    <div class="memory-card" data-symbol="🔤">
+                        <span class="symbol">🔤</span>
+                    </div>
+                </div>
+                <button onclick="resetMemoryGame()" class="mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">Spiel Zurücksetzen</button>
+            </div>
+
+            <!-- Quiz Game -->
+            <div class="bg-gray-900/50 backdrop-blur rounded-xl p-8 border border-gray-800">
+                <h3 class="text-xl font-bold text-purple-400 mb-4">Quiz</h3>
+                <p class="text-gray-400 mb-6 text-sm">Teste dein Wissen über Gefängnistätowierungen!</p>
+                <div id="quizContainer">
+                    <div id="quizQuestion" class="text-lg font-semibold text-gray-200 mb-6">Was bedeuten die Diebessterne?</div>
+                    <div id="quizAnswers" class="space-y-3">
+                        <button class="quiz-btn w-full text-left p-4 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:border-purple-500">Ein hoher Status in der kriminellen Hierarchie</button>
+                        <button class="quiz-btn w-full text-left p-4 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:border-purple-500">Ein Zeichen der Läuterung</button>
+                        <button class="quiz-btn w-full text-left p-4 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:border-purple-500">Symbol für Reichtum</button>
+                        <button class="quiz-btn w-full text-left p-4 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:border-purple-500">Ein Glückssymbol</button>
+                    </div>
+                    <button onclick="nextQuestion()" class="mt-6 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold hidden" id="nextBtn">Nächste Frage</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900/50 border-t border-gray-800 p-6 mt-16">
+        <div class="max-w-6xl mx-auto text-center text-gray-400 text-sm">
+            <p>📚 Bildungsressource über Gefängniskultur und Symbolik</p>
+            <p class="mt-2">Diese Seite dient nur zu Informationszwecken</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== FILTER FUNKTIONALITÄT =====
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const tattooCards = document.querySelectorAll('.tattoo-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Aktiven Button updaten
+                filterBtns.forEach(b => b.classList.remove('active', 'bg-gray-700', 'text-white'));
+                filterBtns.forEach(b => b.classList.add('bg-gray-800', 'text-gray-300', 'border', 'border-gray-700'));
+                btn.classList.add('active', 'bg-gray-700', 'text-white');
+                btn.classList.remove('bg-gray-800', 'text-gray-300', 'border');
+
+                const filter = btn.dataset.filter;
+
+                // Karten filtern
+                tattooCards.forEach(card => {
+                    const category = card.dataset.category;
+                    if (filter === 'all' || category === filter) {
+                        card.style.display = 'block';
+                        setTimeout(() => card.classList.add('visible'), 10);
+                    } else {
+                        card.classList.remove('visible');
+                        setTimeout(() => card.style.display = 'none', 300);
+                    }
+                });
+            });
+        });
+
+        // ===== SEARCH FUNKTIONALITÄT =====
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            tattooCards.forEach(card => {
+                const title = card.querySelector('.tattoo-title').textContent.toLowerCase();
+                const desc = card.querySelector('.tattoo-desc').textContent.toLowerCase();
+                
+                if (title.includes(query) || desc.includes(query)) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.classList.add('visible'), 10);
+                } else {
+                    card.classList.remove('visible');
+                    setTimeout(() => card.style.display = 'none', 300);
+                }
+            });
+        });
+
+        // ===== FADE IN ANIMATION =====
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-element').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===== MEMORY GAME =====
+        let flipped = [];
+        let matched = 0;
+
+        document.querySelectorAll('.memory-card').forEach(card => {
+            card.addEventListener('click', function() {
+                if (flipped.length < 2 && !this.classList.contains('flipped') && !this.classList.contains('matched')) {
+                    this.classList.add('flipped');
+                    flipped.push(this);
+
+                    if (flipped.length === 2) {
+                        checkMatch();
+                    }
+                }
+            });
+        });
+
+        function checkMatch() {
+            const [card1, card2] = flipped;
+            const match = card1.dataset.symbol === card2.dataset.symbol;
+
+            setTimeout(() => {
+                if (match) {
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    matched += 2;
+                    if (matched === 16) {
+                        setTimeout(() => alert('🎉 Glückwunsch! Du hast alle Paare gefunden!'), 500);
+                    }
+                } else {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                }
+                flipped = [];
+            }, 1000);
+        }
+
+        function resetMemoryGame() {
+            document.querySelectorAll('.memory-card').forEach(card => {
+                card.classList.remove('flipped', 'matched');
+            });
+            flipped = [];
+            matched = 0;
+        }
+
+        // ===== QUIZ GAME =====
+        const quizData = [
+            {
+                q: "Was bedeuten die Diebessterne?",
+                a: "Ein hoher Status in der kriminellen Hierarchie",
+                options: ["Ein hoher Status in der kriminellen Hierarchie", "Ein Zeichen der Läuterung", "Symbol für Reichtum", "Ein Glückssymbol"]
+            },
+            {
+                q: "Was symbolisiert eine Spinne im Netz?",
+                a: "Symbol eines Taschendiebs",
+                options: ["Symbol eines Taschendiebs", "Glück und Wohlstand", "Schutz vor Bösen", "Freiheit"]
+            },
+            {
+                q: "Wofür steht S.L.O.N.?",
+                a: "Tod den Bullen durchs Messer",
+                options: ["Tod den Bullen durchs Messer", "Symbol für Liebe", "Sicherheit und Ordnung", "Sonne, Licht, Osten, Norden"]
+            },
+            {
+                q: "Was bedeutet ein Tiger-Tattoo?",
+                a: "Wut, Grausamkeit und Unbarmherzigkeit",
+                options: ["Wut, Grausamkeit und Unbarmherzigkeit", "Sanftheit und Geduld", "Weisheit und Intelligenz", "Liebe zur Natur"]
+            }
+        ];
+
+        let currentQuestion = 0;
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= quizData.length) {
+                currentQuestion = 0;
+            }
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuestion];
+            document.getElementById('quizQuestion').textContent = q.q;
+            const answersDiv = document.getElementById('quizAnswers');
+            answersDiv.innerHTML = '';
+
+            q.options.forEach((option, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn w-full text-left p-4 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:border-purple-500';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(btn, option === q.a);
+                answersDiv.appendChild(btn);
+            });
+
+            document.getElementById('nextBtn').classList.add('hidden');
+        }
+
+        function checkAnswer(btn, isCorrect) {
+            document.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
+            
+            if (isCorrect) {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                document.querySelectorAll('.quiz-btn').forEach(b => {
+                    if (b.textContent === quizData[currentQuestion].a) {
+                        b.classList.add('correct');
+                    }
+                });
+            }
+            
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        // Load first question
+        loadQuestion();
+    </script>
+
+</body>
+</html>
